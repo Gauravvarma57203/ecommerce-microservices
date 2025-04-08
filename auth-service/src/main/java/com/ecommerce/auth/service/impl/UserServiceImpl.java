@@ -3,6 +3,8 @@ package com.ecommerce.auth.service.impl;
 import com.ecommerce.auth.dto.UserRequestDto;
 import com.ecommerce.auth.dto.UserResponseDto;
 import com.ecommerce.auth.exception.EmailAlreadyExistsException;
+import com.ecommerce.auth.exception.InvalidCredentialsException;
+import com.ecommerce.auth.exception.UserNotFoundException;
 import com.ecommerce.auth.model.User;
 import com.ecommerce.auth.repository.UserRepository;
 import com.ecommerce.auth.service.UserService;
@@ -45,6 +47,7 @@ public class UserServiceImpl implements UserService {
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
+                .message("Registration successful")
                 .build();
     }
 
@@ -56,23 +59,26 @@ public class UserServiceImpl implements UserService {
                         .id(user.getId())
                         .name(user.getName())
                         .email(user.getEmail())
+                        .message("User found")
                         .build())
-                .orElse(null);
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
+
 
     @Override
     public UserResponseDto loginUser(UserRequestDto request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
+            throw new  InvalidCredentialsException("Invalid credentials");
         }
 
         return UserResponseDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .message("Login success")
                 .build();
     }
 
