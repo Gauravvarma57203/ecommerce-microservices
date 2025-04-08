@@ -6,4 +6,6 @@ import com.ecommerce.auth.dto.UserResponseDto;
 public interface UserService {
     UserResponseDto registerUser(UserRequestDto request);
     UserResponseDto getUserByEmail(String email);
+    UserResponseDto loginUser(UserRequestDto requestDto);
+
 }
