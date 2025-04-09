@@ -29,8 +29,9 @@ public class UserRequestDto {
     @NotBlank(message = "Password is required")
     @Size(min = 5, message = "Password must be at least 5 characters long")
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{5,}$",
-            message = "Password must contain at least one lowercase, one uppercase, and one special character"
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{5,}$",
+            message = "Password must contain at least one uppercase, one lowercase, one number, one special character, and be at least 5 characters long"
     )
     private String password;
+
 }

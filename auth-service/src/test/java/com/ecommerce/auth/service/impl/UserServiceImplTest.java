@@ -1,10 +1,11 @@
 package com.ecommerce.auth.service.impl;
 
 import com.ecommerce.auth.dto.UserRequestDto;
-import com.ecommerce.auth.dto.UserResponseDto;
+import com.ecommerce.auth.dto.UserLoginResponseDto;
 import com.ecommerce.auth.exception.InvalidCredentialsException;
 import com.ecommerce.auth.model.User;
 import com.ecommerce.auth.repository.UserRepository;
+import com.ecommerce.auth.security.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,8 +30,8 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    // @Mock
-    // private JwtService jwtService;
+     @Mock
+     private JwtUtil jwtutil;
 
     // ✅ Test 1: Happy path
     @Test
@@ -49,7 +50,7 @@ class UserServiceImplTest {
         // when(jwtService.generateToken(user)).thenReturn("mock.jwt.token");
 
         // Act
-        UserResponseDto response = userService.loginUser(request);
+        UserLoginResponseDto response = userService.loginUser(request);
 
         // Assert
         assertNotNull(response);
