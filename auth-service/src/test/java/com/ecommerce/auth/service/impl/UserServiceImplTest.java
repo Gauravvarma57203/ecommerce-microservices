@@ -1,7 +1,8 @@
 package com.ecommerce.auth.service.impl;
 
-import com.ecommerce.auth.dto.UserRequestDto;
+import com.ecommerce.auth.dto.UserRequestLoginDto; // ✅ New login request DTO
 import com.ecommerce.auth.dto.UserLoginResponseDto;
+import com.ecommerce.auth.dto.ApiResponse; // ✅ If your service now returns ApiResponse
 import com.ecommerce.auth.exception.InvalidCredentialsException;
 import com.ecommerce.auth.model.User;
 import com.ecommerce.auth.repository.UserRepository;
@@ -30,14 +31,14 @@ class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-     @Mock
-     private JwtUtil jwtutil;
+    @Mock
+    private JwtUtil jwtutil;
 
     // ✅ Test 1: Happy path
     @Test
     void login_ShouldReturnAuthResponse_WhenCredentialsAreValid() {
         // Arrange
-        UserRequestDto request = new UserRequestDto();
+        UserRequestLoginDto request = new UserRequestLoginDto(); // ✅ Updated DTO
         request.setEmail("test@example.com");
         request.setPassword("password123");
 
@@ -47,23 +48,23 @@ class UserServiceImplTest {
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(user));
         when(passwordEncoder.matches("password123", "encodedPass")).thenReturn(true);
-        // when(jwtService.generateToken(user)).thenReturn("mock.jwt.token");
+        // when(jwtutil.generateToken(user)).thenReturn("mock.jwt.token");
 
         // Act
-        UserLoginResponseDto response = userService.loginUser(request);
+        ApiResponse<UserLoginResponseDto> response = userService.loginUser(request); // ✅ Updated return type
 
         // Assert
         assertNotNull(response);
-        assertEquals("test@example.com", response.getEmail());
-        assertEquals("Login success", response.getMessage());
-        // assertEquals("mock.jwt.token", response.getToken()); // add later after JWT
+        assertEquals("Login success", response.getMessage()); // ✅ Moved to wrapper response
+        assertEquals("test@example.com", response.getData().getEmail()); // ✅ Get data from ApiResponse<UserLoginResponseDto>
+        // assertEquals("mock.jwt.token", response.getData().getToken()); // if token is returned
     }
 
     // ✅ Test 2: User not found
     @Test
     void login_ShouldThrowException_WhenUserNotFound() {
         // Arrange
-        UserRequestDto request = new UserRequestDto();
+        UserRequestLoginDto request = new UserRequestLoginDto(); // ✅ Updated DTO
         request.setEmail("nouser@example.com");
         request.setPassword("irrelevant");
 
@@ -79,7 +80,7 @@ class UserServiceImplTest {
     @Test
     void login_ShouldThrowException_WhenPasswordIsWrong() {
         // Arrange
-        UserRequestDto request = new UserRequestDto();
+        UserRequestLoginDto request = new UserRequestLoginDto(); // ✅ Updated DTO
         request.setEmail("test@example.com");
         request.setPassword("wrongpass");
 

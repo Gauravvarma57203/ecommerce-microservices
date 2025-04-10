@@ -13,6 +13,5 @@ public class UserLoginResponseDto {
     private Long id;
     private String name;
     private String email;
-    private String message;
     private String token;
 }

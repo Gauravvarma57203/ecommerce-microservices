@@ -1,9 +1,7 @@
 package com.ecommerce.auth.service.impl;
 
-import com.ecommerce.auth.dto.UserProfileDto;
-import com.ecommerce.auth.dto.UserRegisterResponseDto;
-import com.ecommerce.auth.dto.UserRequestDto;
-import com.ecommerce.auth.dto.UserLoginResponseDto;
+import com.ecommerce.auth.dto.*;
+import com.ecommerce.auth.dto.legacy.UserRequestDto;
 import com.ecommerce.auth.exception.EmailAlreadyExistsException;
 import com.ecommerce.auth.exception.InvalidCredentialsException;
 import com.ecommerce.auth.exception.UserNotFoundException;
@@ -15,8 +13,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.nio.file.attribute.UserPrincipal;
 
 @Service
 @Valid
@@ -37,25 +33,27 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserRegisterResponseDto registerUser(UserRequestDto request) {
-        // Check if the email already exists
-        if (userRepository.findByEmail(request.getEmail().toLowerCase()).isPresent()) {
-            throw new EmailAlreadyExistsException("This email is already registered. Try logging in or use another email.");
-        }
+    public UserRegisterResponseDto registerUser(UserRequestRegistrationDto request) {
+        // Check if email already exists
+        userRepository.findByEmail(request.getEmail().toLowerCase())
+                .ifPresent(u -> {
+                    throw new EmailAlreadyExistsException("Email already exists");
+                });
 
-        User user = User.builder()
+        // Create user
+        User newUser = User.builder()
                 .name(request.getName())
-                .email(request.getEmail().toLowerCase()) // Normalize email to lowercase
+                .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-        User savedUser = userRepository.save(user);
+        User savedUser = userRepository.save(newUser);
 
         return UserRegisterResponseDto.builder()
                 .id(savedUser.getId())
                 .name(savedUser.getName())
                 .email(savedUser.getEmail())
-                .message("Registration successful")
+                .message("User registered successfully")
                 .build();
     }
 
@@ -74,7 +72,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserLoginResponseDto loginUser(UserRequestDto request) {
+    public UserLoginResponseDto loginUser(UserRequestLoginDto request) {
         User user = userRepository.findByEmail(request.getEmail().toLowerCase())
                 .orElseThrow(() -> new InvalidCredentialsException("User not found"));
 
@@ -97,7 +95,6 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .message("Login success")
                 .token(token)
                 .build();
     }

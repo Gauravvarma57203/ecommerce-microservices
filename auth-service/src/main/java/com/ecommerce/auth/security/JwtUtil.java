@@ -26,13 +26,26 @@ public class JwtUtil {
     }
 
     public String extractEmail(String token) {
-        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public boolean isTokenExpired(String token) {
+        Date expiration = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration();
+        return expiration.before(new Date());
     }
 
     public boolean isTokenValid(String token) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-            return true;
+            return !isTokenExpired(token); // ✅ Explicit check
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
@@ -43,7 +56,4 @@ public class JwtUtil {
         System.out.println("🔐 JWT Secret: " + jwtSecret);
         System.out.println("⏳ JWT Expiration (ms): " + jwtExpirationMs);
     }
-
-
 }
-

@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.legacy;
 
 import com.ecommerce.auth.validation.ValidEmailDomain;
 import jakarta.validation.constraints.Email;
