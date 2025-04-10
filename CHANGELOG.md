@@ -1,8 +1,20 @@
 CHANGELOG
 
 All notable changes to this project will be documented here.
+## 📅 Day 5 – Changelog (April 10, 2025)
 
+### ✅ What Was Done
 
+- 📦 **Created Separate DTOs**
+  - `UserRegisterRequestDto.java` – Handles registration input
+  - `UserRequestLoginDto.java` – Handles login input
+
+- 📄 **Created Generic API Response Wrapper**
+  - `ApiResponse<T>` – Wraps responses with a message, data, and success flag
+
+- 🧹 **Refactored Request & Response Handling**
+  - Cleaned and separated logic for registration and login
+  - Improved code readability and structure
 
 
 ## 📅 Day 4 – April 9, 2025
