@@ -1,6 +1,35 @@
 CHANGELOG
 
 All notable changes to this project will be documented here.
+
+# 📅 Day 6 - Admin-Level User Management + Access Control Handling (April 11, 2025)
+
+## ✅ Features Implemented
+
+### 🔐 Admin-Only APIs
+- `GET /api/admin/users` → Fetch all users (admin-only)
+- `GET /api/admin/users/{id}` → Fetch user by ID (admin-only)
+- `DELETE /api/admin/users/{id}` → Delete user by ID (admin-only)
+
+### 👮‍♂️ Security & Authorization
+- Applied `@PreAuthorize("hasRole('ROLE_ADMIN')")` on admin endpoints
+- Implemented Role-based access control (RBAC)
+- Verified that only admin tokens can access protected endpoints
+- Regular users get proper `403 Access Denied` JSON response
+- Tampered JWTs receive `401 Invalid JWT` responses
+
+### 🛠 Exception Handling
+- Custom `AccessDeniedHandler` configured in `SecurityConfig`
+- Centralized handling for `AccessDeniedException` in `GlobalExceptionHandler`
+
+### 🐞 Bug Fixes & Validations
+- Fixed `NullPointerException` by ensuring all users have a role set
+- Ran SQL script to update missing role values:
+  ```sql
+  UPDATE users SET role = 'ROLE_USER' WHERE role IS NULL;
+
+
+
 ## 📅 Day 5 – Changelog (April 10, 2025)
 
 ### ✅ What Was Done

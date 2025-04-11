@@ -1,14 +1,16 @@
 package com.ecommerce.auth.service;
 
 import com.ecommerce.auth.dto.*;
-import com.ecommerce.auth.dto.legacy.UserRequestDto;
+import com.ecommerce.auth.dto.legacy.UserResponseRegisterDto;
 
 public interface UserService {
 
-    UserProfileDto getUserByEmail(String email);
-    UserLoginResponseDto loginUser(UserRequestLoginDto request);
+    ApiResponse<UserProfileDto> getCurrentUser(String email);
+    ApiResponse<UserProfileDto> getUserByEmail(String email);
 
-    UserRegisterResponseDto registerUser(UserRequestRegistrationDto request);
+
+    ApiResponse<AuthResponse> loginUser(UserRequestLoginDto request);
+    ApiResponse<AuthResponse> registerUser(UserRequestRegistrationDto request);
 
 
 }

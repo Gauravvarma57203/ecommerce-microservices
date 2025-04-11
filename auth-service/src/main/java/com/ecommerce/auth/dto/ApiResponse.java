@@ -38,4 +38,15 @@ public class ApiResponse<T> {
                 .timestamp(Instant.now())
                 .build();
     }
+
+    public static <T> ApiResponse<T> error(String message, String path, int status) {
+        return ApiResponse.<T>builder()
+                .success(false)
+                .message(message)
+                .status(status)
+                .path(path)
+                .timestamp(Instant.now())
+                .data(null)
+                .build();
+    }
 }

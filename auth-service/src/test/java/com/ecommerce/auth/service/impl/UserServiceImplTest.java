@@ -1,7 +1,7 @@
 package com.ecommerce.auth.service.impl;
 
+import com.ecommerce.auth.dto.AuthResponse;
 import com.ecommerce.auth.dto.UserRequestLoginDto; // ✅ New login request DTO
-import com.ecommerce.auth.dto.UserLoginResponseDto;
 import com.ecommerce.auth.dto.ApiResponse; // ✅ If your service now returns ApiResponse
 import com.ecommerce.auth.exception.InvalidCredentialsException;
 import com.ecommerce.auth.model.User;
@@ -51,7 +51,7 @@ class UserServiceImplTest {
         // when(jwtutil.generateToken(user)).thenReturn("mock.jwt.token");
 
         // Act
-        ApiResponse<UserLoginResponseDto> response = userService.loginUser(request); // ✅ Updated return type
+        ApiResponse<AuthResponse> response = userService.loginUser(request); // ✅ Updated return type
 
         // Assert
         assertNotNull(response);

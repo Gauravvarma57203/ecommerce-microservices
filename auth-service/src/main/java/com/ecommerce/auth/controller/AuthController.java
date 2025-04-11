@@ -1,7 +1,6 @@
 package com.ecommerce.auth.controller;
 
 import com.ecommerce.auth.dto.*;
-import com.ecommerce.auth.dto.legacy.UserRequestDto;
 import com.ecommerce.auth.model.User;
 import com.ecommerce.auth.repository.UserRepository;
 import com.ecommerce.auth.service.UserService;
@@ -23,55 +22,48 @@ public class AuthController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    public AuthController(UserService userService ,UserRepository userRepository) {
+    public AuthController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
-        this.userRepository=userRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(@RequestBody @Valid UserRequestRegistrationDto request,
-                                                    HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<AuthResponse>> registerUser(
+            @RequestBody @Valid UserRequestRegistrationDto request,
+            HttpServletRequest httpRequest) {
 
-        UserRegisterResponseDto responseData = userService.registerUser(request);
-
-        ApiResponse response = ApiResponse.builder()
-                .success(true)
-                .message("User registered successfully")
-                .status(HttpStatus.CREATED.value())
-                .path(httpRequest.getRequestURI())
-                .data(responseData)
-                .timestamp(Instant.now())
-                .build();
-
+        ApiResponse<AuthResponse> response = userService.registerUser(request);
+        addMeta(response, httpRequest, HttpStatus.CREATED);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-
-    @GetMapping("/user")
-    public ResponseEntity<UserProfileDto> getUserByEmail(@RequestParam String email) {
-        UserProfileDto user = userService.getUserByEmail(email);
-        if (user != null)
-            return ResponseEntity.ok(user);
-        else
-            return ResponseEntity.notFound().build();
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> loginUser(
-            @RequestBody @Valid UserRequestLoginDto requestDto,
+    public ResponseEntity<ApiResponse<AuthResponse>> loginUser(
+            @RequestBody @Valid UserRequestLoginDto request,
             HttpServletRequest httpRequest) {
 
-        UserLoginResponseDto loginData = userService.loginUser(requestDto);
+        ApiResponse<AuthResponse> response = userService.loginUser(request);
+        addMeta(response, httpRequest, HttpStatus.OK);
+        return ResponseEntity.ok(response);
+    }
 
-        ApiResponse response = ApiResponse.builder()
-                .success(true)
-                .message("Login successful")
-                .status(HttpStatus.OK.value())
-                .path(httpRequest.getRequestURI())
-                .data(loginData)
-                .timestamp(Instant.now())
-                .build();
+    @GetMapping("/user")
+    public ResponseEntity<ApiResponse<UserProfileDto>> getUserByEmail(
+            @RequestParam String email,
+            HttpServletRequest httpRequest) {
 
+        ApiResponse<UserProfileDto> response = userService.getUserByEmail(email);
+        addMeta(response, httpRequest, HttpStatus.OK);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserProfileDto>> getCurrentUser(
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest httpRequest) {
+
+        ApiResponse<UserProfileDto> response = userService.getCurrentUser(userDetails.getUsername());
+        addMeta(response, httpRequest, HttpStatus.OK);
         return ResponseEntity.ok(response);
     }
 
@@ -81,18 +73,9 @@ public class AuthController {
         return ResponseEntity.ok("Auth Service is healthy 💚");
     }
 
-    @GetMapping("/me")
-    public UserProfileDto getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return UserProfileDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .message("Current user details fetched successfully")
-                .build();
-
-
+    private <T> void addMeta(ApiResponse<T> response, HttpServletRequest request, HttpStatus status) {
+        response.setPath(request.getRequestURI());
+        response.setStatus(status.value());
+        response.setTimestamp(Instant.now());
     }
 }

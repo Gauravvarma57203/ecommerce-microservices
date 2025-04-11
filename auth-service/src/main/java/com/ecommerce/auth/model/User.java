@@ -22,5 +22,8 @@ public class User {
 
     private String password;
 
-    private String role;  // "USER" or "ADMIN"
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;            // "USER" or "ADMIN"
+
 }

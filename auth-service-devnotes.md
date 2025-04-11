@@ -185,7 +185,8 @@ docker compose down
 
 ### 🔸 PostgreSQL via Docker
 ```bash
-docker exec -it <postgres-container-name> psql -U postgres -d auth-db
+docker exec -it postgres psql -U postgres -d auth_db
+
 ```
 
 ---

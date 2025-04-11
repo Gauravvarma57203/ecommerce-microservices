@@ -1,4 +1,4 @@
-package com.ecommerce.auth.dto;
+package com.ecommerce.auth.dto.legacy;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserLoginResponseDto {
+public class UserResponseLoginDto {
     private Long id;
     private String name;
     private String email;

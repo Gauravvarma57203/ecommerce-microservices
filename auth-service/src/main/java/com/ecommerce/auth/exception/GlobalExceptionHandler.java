@@ -4,6 +4,7 @@ import com.ecommerce.auth.dto.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -70,6 +71,12 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<?>> handleAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error("Access Denied: You don't have permission.", request.getRequestURI(), HttpStatus.FORBIDDEN.value()));
+    }
+
     // ✅ Handles unexpected errors (fallback) — keeps message generic for security
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse> handleGenericException(Exception ex, HttpServletRequest request) {
@@ -78,4 +85,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
+
+
 }

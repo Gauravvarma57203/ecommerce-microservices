@@ -8,13 +8,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserProfileDto {
-    private Long id;
+@AllArgsConstructor
+public class AuthResponse {
+    private Long id;       // Required for .id(...) in builder
     private String name;
     private String email;
-    private String message;
+    private String token;
     private Role role;
-
 }
