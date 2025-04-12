@@ -1,9 +1,12 @@
 package com.ecommerce.auth.service.impl;
 
+
+
 import com.ecommerce.auth.dto.*;
 import com.ecommerce.auth.exception.EmailAlreadyExistsException;
 import com.ecommerce.auth.exception.InvalidCredentialsException;
 import com.ecommerce.auth.exception.UserNotFoundException;
+import com.ecommerce.auth.model.Role;
 import com.ecommerce.auth.model.User;
 import com.ecommerce.auth.repository.UserRepository;
 import com.ecommerce.auth.security.JwtUtil;
@@ -41,6 +44,7 @@ public class UserServiceImpl implements UserService {
                 .name(request.getName())
                 .email(request.getEmail().toLowerCase())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.ROLE_USER)
                 .build();
 
         User savedUser = userRepository.save(newUser);
@@ -55,7 +59,7 @@ public class UserServiceImpl implements UserService {
                 .token(token)
                 .build();
 
-        return ApiResponse.success("User registered successfully", authResponse);
+        return ApiResponse.success(authResponse,"User registered successfully" );
     }
 
     @Override
@@ -77,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 .token(token)
                 .build();
 
-        return ApiResponse.success("Login successful", authResponse);
+        return ApiResponse.success( authResponse,"Login successful");
     }
 
     @Override
@@ -93,7 +97,7 @@ public class UserServiceImpl implements UserService {
                 .message("User found")
                 .build();
 
-        return ApiResponse.success("User fetched successfully", profileDto);
+        return ApiResponse.success(profileDto,"User fetched successfully" );
     }
 
     // ✅ This can be used in /me

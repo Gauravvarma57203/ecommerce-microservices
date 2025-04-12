@@ -2,6 +2,21 @@ CHANGELOG
 
 All notable changes to this project will be documented here.
 
+# **Changelog for April 12, 2025**
+
+## **Day 7: Pagination and User Role Assignment**
+
+1. **Implemented Pagination for User Listing**
+  - Added pagination support to the admin endpoint (`GET /api/admin/users`) to fetch users.
+  - Pagination response includes:
+    - `content`: List of users with `id`, `name`, `email`, and `role`.
+    - `pageNumber`, `pageSize`, `totalElements`, `totalPages`, and `lastPage` for easy navigation of large datasets.
+
+2. **Fixed User Role Assignment**
+  - Fixed issue where user roles weren't being set during registration.
+  - Default role `ROLE_USER` is now assigned to new users during registration.
+
+
 # 📅 Day 6 - Admin-Level User Management + Access Control Handling (April 11, 2025)
 
 ## ✅ Features Implemented

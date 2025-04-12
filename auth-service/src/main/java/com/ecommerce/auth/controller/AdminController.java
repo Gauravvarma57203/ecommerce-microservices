@@ -1,5 +1,7 @@
 package com.ecommerce.auth.controller;
 
+import com.ecommerce.auth.dto.ApiResponse;
+import com.ecommerce.auth.dto.PaginatedResponse;
 import com.ecommerce.auth.dto.UserDto;
 import com.ecommerce.auth.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,14 @@ public class AdminController {
 
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(adminService.getAllUsers());
+    public ResponseEntity<ApiResponse<?>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        PaginatedResponse<UserDto> response = adminService.getAllUsers(page, size);
+        return ResponseEntity.ok(ApiResponse.success(response, "User list fetched successfully"));
     }
+
 
     @GetMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")

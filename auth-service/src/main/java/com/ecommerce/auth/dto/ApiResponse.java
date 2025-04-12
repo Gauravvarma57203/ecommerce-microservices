@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.el.stream.Optional;
 
 import java.time.Instant;
 
@@ -21,7 +20,7 @@ public class ApiResponse<T> {
     private Instant timestamp;     // time of response generation
 
     // Factory method for success response
-    public static <T> ApiResponse<T> success(String message, T data) {
+    public static <T> ApiResponse<T> success(T data,String message) {
         return ApiResponse.<T>builder()
                 .success(true)
                 .message(message)

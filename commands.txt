@@ -1,0 +1,49 @@
+
+Command						Purpose
+
+Git commands 
+
+git init	  				Initialize a new Git repo
+git add .					Stage all changes
+git commit -m "message"				Commit changes with a message
+git branch feature/auth-service			Create a new feature branch
+git checkout feature/auth-service		Switch to the branch
+git push origin feature/auth-service		Push the branch to remote
+git status					Check current status of working directory
+git log						View commit history
+git merge					Merge branches
+git pull					Pull latest changes from remote
+git clone <repo-url>				Clone remote repo
+git checkout -b feature/x			Create and switch to a new branch
+
+
+Maven Commands Used
+Command						Purpose
+
+mvn clean					Remove old compiled files (clean target dir)
+mvn install					Compile, test, and package the app
+mvn clean install				Full clean build cycle
+mvnw clean install -DskipTests 
+
+mvn test					Run test cases
+mvn spring-boot:run				Start Spring Boot app
+mvn package					Package app into JAR/WAR file
+
+🐳 Docker & Docker Compose Commands Used
+Command						Purpose
+docker build -t auth-service . 			Build Docker image for auth-service
+docker images					List all Docker images
+docker ps					List running containers
+docker ps -a					List all containers (including stopped)
+docker stop <container_id>			Stop a running container
+docker start <container_id>			Start a stopped container
+docker rm <container_id>			Remove a container
+docker rmi <image_id>				Remove an image
+docker-compose up				Start all services defined in docker-compose.yml
+docker-compose down				Stop and remove all services/containers/networks
+docker-compose stop				Gracefully stop services (but keep volumes and networks)
+docker-compose up --build			Rebuild services and start them
+		Access container shell (used with Postgres sometimes)
+
+
+
