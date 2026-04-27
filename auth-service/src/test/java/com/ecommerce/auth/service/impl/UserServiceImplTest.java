@@ -1,12 +1,10 @@
 package com.ecommerce.auth.service.impl;
 
-import com.ecommerce.auth.dto.AuthResponse;
-import com.ecommerce.auth.dto.UserRequestLoginDto; // ✅ New login request DTO
-import com.ecommerce.auth.dto.ApiResponse; // ✅ If your service now returns ApiResponse
-import com.ecommerce.auth.exception.InvalidCredentialsException;
-import com.ecommerce.auth.model.User;
-import com.ecommerce.auth.repository.UserRepository;
-import com.ecommerce.auth.security.JwtUtil;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,10 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import com.ecommerce.auth.dto.ApiResponse; // ✅ If your service now returns ApiResponse
+import com.ecommerce.auth.dto.AuthResponse;
+import com.ecommerce.auth.dto.UserRequestLoginDto; // ✅ New login request DTO
+import com.ecommerce.auth.exception.InvalidCredentialsException;
+import com.ecommerce.auth.model.User;
+import com.ecommerce.auth.repository.UserRepository;
+import com.ecommerce.auth.security.JwtUtil;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -55,7 +56,7 @@ class UserServiceImplTest {
 
         // Assert
         assertNotNull(response);
-        assertEquals("Login success", response.getMessage()); // ✅ Moved to wrapper response
+        assertEquals("Login successful", response.getMessage()); // ✅ Moved to wrapper response
         assertEquals("test@example.com", response.getData().getEmail()); // ✅ Get data from ApiResponse<UserLoginResponseDto>
         // assertEquals("mock.jwt.token", response.getData().getToken()); // if token is returned
     }
