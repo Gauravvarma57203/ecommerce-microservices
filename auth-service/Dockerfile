@@ -1,7 +1,7 @@
 # Dockerfile inside auth-service/
 
 # Step 1: Use a lightweight JDK base image
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-jammy
 
 # Step 2: Set working directory
 WORKDIR /app
