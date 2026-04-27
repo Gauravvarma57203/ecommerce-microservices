@@ -20,9 +20,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run tests
+      - name: Build and test
         working-directory: auth-service
-        run: ./mvnw test
+        run: ./mvnw package
 
       - name: Build Docker image
         working-directory: auth-service
