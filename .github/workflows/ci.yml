@@ -36,3 +36,19 @@ jobs:
 
       - name: Push to Docker Hub
         run: docker push gauravvarma57202/auth-service:latest
+
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull gauravvarma57202/auth-service:latest
+            docker stop auth-service || true
+            docker rm auth-service || true
+            docker run -d \
+              --name auth-service \
+              -p 8080:8080 \
+              gauravvarma57202/auth-service:latest

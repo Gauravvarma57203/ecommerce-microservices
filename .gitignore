@@ -28,7 +28,55 @@ replay_pid*
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+
+# Optional
+crash.log
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                              [ Wrote 36 lines ]
+^G Help           ^O Write Out      ^W Where Is       ^K Cut            ^T Execute        ^C Location       M-U Undo          M-A Set Mark      M-] To Bracket    M-Q Previous      ^B Back           ^◂ Prev Word      ^A Home           ^P Prev Line      M-▴ Scroll Up
+^X Exit           ^R Read File      ^\ Replace        ^U Paste          ^J Justify        ^/ Go To Line     M-E Redo          M-6 Copy          ^Q Where Was      M-W Next          ^F Forward        ^▸ Next Word      ^E End            ^N Next Line      M-▾ Scroll Down
+
 
 # Optional
 crash.log
