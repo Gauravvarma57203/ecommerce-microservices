@@ -11,23 +11,32 @@ provider "aws" {
   region = var.region
 }
 
-# ---------------------------
+# -----------------------------------
+# Read Jenkins compose file
+# -----------------------------------
+
+locals {
+  jenkins_compose = file("${path.module}/jenkins/docker-compose.yml")
+}
+
+# -----------------------------------
 # Security Group
-# ---------------------------
-resource "aws_security_group" "auth_sg" {
-  name        = "auth-service-sg"
-  description = "Allow SSH, Jenkins, App"
+# -----------------------------------
+
+resource "aws_security_group" "devops_sg" {
+  name        = "devops-sg"
+  description = "Allow Jenkins and app traffic"
 
   ingress {
     description = "SSH"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # tighten later
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
-    description = "Jenkins UI"
+    description = "Jenkins"
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
@@ -42,6 +51,22 @@ resource "aws_security_group" "auth_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Application"
+    from_port   = 8081
+    to_port     = 8081
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Postgres"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -50,65 +75,67 @@ resource "aws_security_group" "auth_sg" {
   }
 }
 
-# ---------------------------
+# -----------------------------------
 # EC2 Instance
-# ---------------------------
-resource "aws_instance" "auth_server" {
-  ami                    = var.ami_id
-  instance_type          = var.instance_type
-  key_name               = var.key_name
-  vpc_security_group_ids = [aws_security_group.auth_sg.id]
+# -----------------------------------
+
+resource "aws_instance" "devops_server" {
+
+  ami           = var.ami_id
+  instance_type = var.instance_type
+  key_name      = var.key_name
+
+  vpc_security_group_ids = [
+    aws_security_group.devops_sg.id
+  ]
 
   user_data = <<-EOF
               #!/bin/bash
               set -euxo pipefail
 
-              # Log everything
               exec > /var/log/user-data.log 2>&1
 
-              echo "=== START ==="
+              echo "===== STARTING SETUP ====="
 
               apt-get update -y
 
-              # Install base packages
               apt-get install -y \
                 docker.io \
                 curl \
-                ca-certificates \
-                fontconfig \
                 openjdk-17-jre
 
-              # Start Docker
               systemctl enable docker
               systemctl start docker
+
               usermod -aG docker ubuntu
 
-              echo "=== DOCKER INSTALLED ==="
-
-              # Install Docker Compose (manual, stable)
               curl -L "https://github.com/docker/compose/releases/download/v2.24.0/docker-compose-$(uname -s)-$(uname -m)" \
                 -o /usr/local/bin/docker-compose
 
               chmod +x /usr/local/bin/docker-compose
+
               docker-compose --version
 
-              echo "=== DOCKER COMPOSE INSTALLED ==="
+              echo "===== DOCKER READY ====="
 
-              docker run -d \
-              -p 8080:8080 \
-              -p 50000:50000 \
-              --name jenkins \
-              --restart unless-stopped \
-              -v jenkins_home:/var/jenkins_home \
-              jenkins/jenkins:lts
+              mkdir -p /home/ubuntu/jenkins
 
-              # Status check (non-blocking)
-              systemctl status docker || true
+              cat <<'EOT' > /home/ubuntu/jenkins/docker-compose.yml
+              ${local.jenkins_compose}
+              EOT
 
-              echo "=== SETUP COMPLETE ==="
+              cd /home/ubuntu/jenkins
+
+              docker-compose up -d
+
+              echo "===== JENKINS STARTED ====="
+
+              docker ps
+
+              echo "===== SETUP COMPLETE ====="
               EOF
 
   tags = {
-    Name = "auth-service-server"
+    Name = "devops-server"
   }
 }

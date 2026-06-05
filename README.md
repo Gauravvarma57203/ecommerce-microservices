@@ -168,3 +168,80 @@ Add Swagger API documentation
 You — the one-dev-army 💪
 
 “One day at a time. One commit at a time. One service at a time.”
+
+
+
+
+
+
+# DevOps Learning Project - Ecommerce Microservices
+
+## Project Overview
+
+This project demonstrates a complete DevOps workflow using:
+
+- Spring Boot
+- PostgreSQL
+- Docker
+- Docker Compose
+- GitHub
+- Jenkins
+- Terraform
+- AWS EC2
+
+---
+
+## Architecture
+
+Developer
+↓
+GitHub Repository
+↓
+Jenkins Pipeline
+↓
+Docker Build
+↓
+Docker Hub Push
+↓
+Docker Pull
+↓
+Docker Compose Deploy
+↓
+AWS EC2
+↓
+Spring Boot + PostgreSQL
+
+---
+
+## Infrastructure Provisioning
+
+Infrastructure is provisioned using Terraform.
+
+Terraform creates:
+
+- EC2 Instance
+- Security Group
+- Docker Installation
+- Docker Compose Installation
+- Jenkins Container
+
+Terraform bootstrap automatically starts Jenkins using Docker Compose.
+
+---
+
+## CI/CD Pipeline
+
+Pipeline is implemented using Jenkins.
+
+Stages:
+
+### Checkout
+
+Pull source code from GitHub.
+
+### Build
+
+Build Spring Boot application using Maven.
+
+```bash
+./mvnw clean package
