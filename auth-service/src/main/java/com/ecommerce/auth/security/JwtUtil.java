@@ -51,9 +51,4 @@ public class JwtUtil {
         }
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("🔐 JWT Secret: " + jwtSecret);
-        System.out.println("⏳ JWT Expiration (ms): " + jwtExpirationMs);
-    }
 }
